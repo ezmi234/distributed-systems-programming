@@ -12,7 +12,9 @@ require('./passport-config');
 var session = require('express-session');
 var FilmManager = require('./components/FilmManager');
 const { getFilmManager } = require('./controllers/Api');
-var filmManager = new FilmManager();
+const { getUsers } = require('./controllers/Apiusers');
+const { authenticateUser } = require('./controllers/Apiusersauthenticator');
+const filmManager = new FilmManager();
 
 // Swagger configuration
 
@@ -55,6 +57,10 @@ const isLoggedIn = (req, res, next) => {
 // Example:
 // app.post('/api/films', isLoggedIn, validate({ body: filmSchema }), yourController.createFilm);
 app.get(filmManager.api, getFilmManager);
+
+app.get(filmManager.users, isLoggedIn, getUsers);
+console.log(filmManager.users + "authenticator")
+app.post(filmManager.users + "authenticator", authenticateUser)
 
 
 // Initialize the Swagger middleware

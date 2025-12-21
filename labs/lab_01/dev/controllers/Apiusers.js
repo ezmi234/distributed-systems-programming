@@ -1,10 +1,10 @@
 'use strict';
 
 var utils = require('../utils/writer.js');
-var Apiusers = require('../service/ApiusersService');
+const userService = require('../service/UsersService.js');
 
 module.exports.getUsers = function getUsers (req, res, next) {
-  Apiusers.getUsers()
+  userService.getUsers()
     .then(function (response) {
       utils.writeJson(res, response);
     })
