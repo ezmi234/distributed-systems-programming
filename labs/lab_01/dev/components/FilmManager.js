@@ -1,5 +1,6 @@
 class FilmManager{    
     constructor() {
+        this.api = "/api"
         this.films = "/change/me";
         this.privateFilms = "/change/me";
         this.publicFilms = "/change/me";

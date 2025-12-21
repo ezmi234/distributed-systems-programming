@@ -10,6 +10,9 @@ var serverPort = 3001;
 var passport = require('passport');
 require('./passport-config');
 var session = require('express-session');
+var FilmManager = require('./components/FilmManager');
+const { getFilmManager } = require('./controllers/Api');
+var filmManager = new FilmManager();
 
 // Swagger configuration
 
@@ -51,6 +54,7 @@ const isLoggedIn = (req, res, next) => {
 // Hint: You can apply your validator to routes that expect JSON input
 // Example:
 // app.post('/api/films', isLoggedIn, validate({ body: filmSchema }), yourController.createFilm);
+app.get(filmManager.api, getFilmManager);
 
 
 // Initialize the Swagger middleware
