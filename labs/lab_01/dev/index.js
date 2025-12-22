@@ -14,6 +14,8 @@ var FilmManager = require('./components/FilmManager');
 const { getFilmManager } = require('./controllers/Api');
 const { getUsers } = require('./controllers/Apiusers');
 const { authenticateUser } = require('./controllers/Apiusersauthenticator');
+const { logoutUser } = require('./controllers/Apiusersauthenticatorcurrent');
+const { getSingleUser } = require('./controllers/ApiusersuserId');
 const filmManager = new FilmManager();
 
 // Swagger configuration
@@ -59,8 +61,9 @@ const isLoggedIn = (req, res, next) => {
 app.get(filmManager.api, getFilmManager);
 
 app.get(filmManager.users, isLoggedIn, getUsers);
-console.log(filmManager.users + "authenticator")
-app.post(filmManager.users + "authenticator", authenticateUser)
+app.post(filmManager.users + "authenticator", authenticateUser);
+app.delete(filmManager.users + "authenticator/current", isLoggedIn, logoutUser);
+app.get(filmManager.users + ":userId", isLoggedIn, getSingleUser);
 
 
 // Initialize the Swagger middleware

@@ -1,14 +1,19 @@
 'use strict';
 
 var utils = require('../utils/writer.js');
-var ApiusersuserId = require('../service/ApiusersuserIdService');
+const userService = require('../service/UsersService.js');
 
-module.exports.getSingleUser = function getSingleUser (req, res, next, userId) {
-  ApiusersuserId.getSingleUser(userId)
+module.exports.getSingleUser = function getSingleUser (req, res, next) {
+  userService.getUserById(req.params.userId)
     .then(function (response) {
-      utils.writeJson(res, response);
+      if(!response){
+        utils.writeJson(res, response, 404);
+     } else {
+       utils.writeJson(res, response);
+    }
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, {errors: [{ 'param': 'Server', 'msg': response }],}, 500);
     });
 };
+
