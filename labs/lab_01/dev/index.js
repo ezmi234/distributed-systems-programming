@@ -16,6 +16,8 @@ const { getUsers } = require('./controllers/Apiusers');
 const { authenticateUser } = require('./controllers/Apiusersauthenticator');
 const { logoutUser } = require('./controllers/Apiusersauthenticatorcurrent');
 const { getSingleUser } = require('./controllers/ApiusersuserId');
+const { getPublicFilms } = require('./controllers/Apifilmspublic');
+const { createFilm } = require('./controllers/Apifilms');
 const filmManager = new FilmManager();
 
 // Swagger configuration
@@ -49,7 +51,15 @@ const isLoggedIn = (req, res, next) => {
 // TODO: Set up your JSON validator here
 // You can use 'express-json-validator-middleware' (https://www.npmjs.com/package/express-json-validator-middleware),
 // which is based on the 'ajv' module (https://www.npmjs.com/package/ajv).
-
+var filmSchema = JSON.parse(fs.readFileSync(path.join('.', 'json_schemas', 'film_schema.json')).toString());
+var userSchema = JSON.parse(fs.readFileSync(path.join('.', 'json_schemas', 'user_schema.json')).toString());
+var reviewSchema = JSON.parse(fs.readFileSync(path.join('.', 'json_schemas', 'review_schema.json')).toString());
+var validator = new Validator({ allErrors: true });
+validator.ajv.addSchema([userSchema, filmSchema, reviewSchema]);
+const addFormats = require('ajv-formats').default;
+addFormats(validator.ajv);
+var validate = validator.validate;
+console.log(filmSchema)
 
 /*** Route Definitions ***/
 // TODO: Define your API routes here
@@ -60,9 +70,15 @@ const isLoggedIn = (req, res, next) => {
 // app.post('/api/films', isLoggedIn, validate({ body: filmSchema }), yourController.createFilm);
 app.get(filmManager.api, getFilmManager);
 
+// FILMS PUBLIC ENDPOINT
+app.post(filmManager.films, isLoggedIn, validate({body: filmSchema}), createFilm)
+app.get(filmManager.publicFilms, getPublicFilms)
+
+
+// USER ENDPOINT
 app.get(filmManager.users, isLoggedIn, getUsers);
-app.post(filmManager.users + "authenticator", authenticateUser);
-app.delete(filmManager.users + "authenticator/current", isLoggedIn, logoutUser);
+app.post(filmManager.usersAuthenticator, authenticateUser);
+app.delete(filmManager.usersAuthenticator + "current", isLoggedIn, logoutUser);
 app.get(filmManager.users + ":userId", isLoggedIn, getSingleUser);
 
 
