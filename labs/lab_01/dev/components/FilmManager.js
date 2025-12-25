@@ -4,8 +4,8 @@ class FilmManager{
         this.films = this.api + "films/";
         this.privateFilms = this.films + "private/";
         this.publicFilms = this.films + "public/";
-        this.invitedPublicFilms = "/change/me";
-        this.reviewAssignments = "/change/me";
+        this.invitedPublicFilms = this.publicFilms + "invited/"; 
+        this.reviewAssignments = this.publicFilms + "assignments/"
         this.users = this.api + "users/";
         this.usersAuthenticator = this.users + "authenticator/";
     }

@@ -21,6 +21,7 @@ const { createFilm } = require('./controllers/Apifilms');
 const { getPrivateFilms } = require('./controllers/Apifilmsprivate');
 const { getSinglePrivateFilm, updateSinglePrivateFilm, deleteSinglePrivateFilm } = require('./controllers/ApifilmsprivatefilmId');
 const { getSinglePublicFilm, updateSinglePublicFilm, deleteSinglePublicFilm } = require('./controllers/ApifilmspublicfilmId');
+const { getInvitedFilms } = require('./controllers/Apifilmspublicinvited');
 const filmManager = new FilmManager();
 
 // Swagger configuration
@@ -74,6 +75,7 @@ app.get(filmManager.api, getFilmManager);
 
 // FILMS PUBLIC ENDPOINT
 app.post(filmManager.films, isLoggedIn, validate({body: filmSchema}), createFilm);
+app.get(filmManager.invitedPublicFilms, isLoggedIn, getInvitedFilms);
 app.get(filmManager.privateFilms, isLoggedIn, getPrivateFilms);
 app.get(filmManager.privateFilms + ":filmId", isLoggedIn, getSinglePrivateFilm);
 app.put(filmManager.privateFilms + ":filmId", isLoggedIn, updateSinglePrivateFilm);
