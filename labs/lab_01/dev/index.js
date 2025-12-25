@@ -18,6 +18,9 @@ const { logoutUser } = require('./controllers/Apiusersauthenticatorcurrent');
 const { getSingleUser } = require('./controllers/ApiusersuserId');
 const { getPublicFilms } = require('./controllers/Apifilmspublic');
 const { createFilm } = require('./controllers/Apifilms');
+const { getPrivateFilms } = require('./controllers/Apifilmsprivate');
+const { getSinglePrivateFilm, updateSinglePrivateFilm, deleteSinglePrivateFilm } = require('./controllers/ApifilmsprivatefilmId');
+const { getSinglePublicFilm, updateSinglePublicFilm, deleteSinglePublicFilm } = require('./controllers/ApifilmspublicfilmId');
 const filmManager = new FilmManager();
 
 // Swagger configuration
@@ -59,7 +62,6 @@ validator.ajv.addSchema([userSchema, filmSchema, reviewSchema]);
 const addFormats = require('ajv-formats').default;
 addFormats(validator.ajv);
 var validate = validator.validate;
-console.log(filmSchema)
 
 /*** Route Definitions ***/
 // TODO: Define your API routes here
@@ -71,9 +73,16 @@ console.log(filmSchema)
 app.get(filmManager.api, getFilmManager);
 
 // FILMS PUBLIC ENDPOINT
-app.post(filmManager.films, isLoggedIn, validate({body: filmSchema}), createFilm)
-app.get(filmManager.publicFilms, getPublicFilms)
+app.post(filmManager.films, isLoggedIn, validate({body: filmSchema}), createFilm);
+app.get(filmManager.privateFilms, isLoggedIn, getPrivateFilms);
+app.get(filmManager.privateFilms + ":filmId", isLoggedIn, getSinglePrivateFilm);
+app.put(filmManager.privateFilms + ":filmId", isLoggedIn, updateSinglePrivateFilm);
+app.delete(filmManager.privateFilms + ":filmId", isLoggedIn, deleteSinglePrivateFilm);
 
+app.get(filmManager.publicFilms, getPublicFilms);
+app.get(filmManager.publicFilms + ":filmId", isLoggedIn, getSinglePublicFilm);
+app.put(filmManager.publicFilms + ":filmId", isLoggedIn, updateSinglePublicFilm);
+app.delete(filmManager.publicFilms + ":filmId", isLoggedIn, deleteSinglePublicFilm);
 
 // USER ENDPOINT
 app.get(filmManager.users, isLoggedIn, getUsers);
